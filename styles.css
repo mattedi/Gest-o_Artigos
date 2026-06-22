@@ -130,7 +130,9 @@ button {
   min-height: 100vh;
   margin-left: 232px;
   min-width: 0;
-  width: calc(100% - 232px);
+  width: auto;
+  max-width: none;
+  overflow-x: hidden;
 }
 
 .topbar {
@@ -266,7 +268,8 @@ h2 {
   grid-template-columns: minmax(240px, 1fr) 180px 180px 190px;
   gap: 12px;
   padding: 22px 32px 0;
-  max-width: 1640px;
+  width: 100%;
+  max-width: 100%;
 }
 
 label {
@@ -298,10 +301,11 @@ textarea:focus {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   padding: 20px 32px 18px;
-  max-width: 1640px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .stat-card {
@@ -349,10 +353,11 @@ textarea:focus {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 370px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   padding: 0 32px 32px;
-  max-width: 1640px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .main-column {
@@ -363,11 +368,14 @@ textarea:focus {
 
 .right-column {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 18px;
 }
 
 .panel {
+  min-width: 0;
+  max-width: 100%;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -384,19 +392,24 @@ textarea:focus {
 
 .kanban-board {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(220px, 260px);
-  gap: 10px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  overflow: visible;
   padding: 0 12px 12px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .kanban-column {
-  min-height: 440px;
+  min-width: 0;
+  min-height: 0;
   border: 1px solid color-mix(in srgb, var(--status-color), white 72%);
   border-radius: 8px;
   background: color-mix(in srgb, var(--status-color), white 88%);
+}
+
+.kanban-column:has(.kanban-cards > button:only-child) {
+  min-height: 128px;
 }
 
 .kanban-title {
@@ -422,8 +435,13 @@ textarea:focus {
 
 .kanban-cards {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 8px;
   padding: 0 8px 8px;
+}
+
+.kanban-cards > .ghost-button {
+  align-self: start;
 }
 
 .article-card {
@@ -522,7 +540,7 @@ textarea:focus {
 
 .bottom-grid {
   display: grid;
-  grid-template-columns: minmax(300px, 0.9fr) minmax(280px, 0.7fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 
@@ -782,7 +800,7 @@ body.kanban-expanded .main-column > .panel:last-child {
 }
 
 body.kanban-expanded .kanban-board {
-  grid-auto-columns: minmax(250px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
 }
 
 body[data-section="artigos"] .panel-metrics,
@@ -825,7 +843,7 @@ body[data-section="relatorios"] .panel-analytics {
 }
 
 body[data-section="kanban"] .kanban-board {
-  grid-auto-columns: minmax(260px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - 320px);
 }
 
@@ -844,16 +862,16 @@ body[data-section="alunos"] .panel-article-table {
 }
 
 body[data-section="prazos"] .right-column {
-  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 body[data-section="relatorios"] .right-column {
-  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 @media (max-width: 1320px) {
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .workspace {
@@ -861,24 +879,26 @@ body[data-section="relatorios"] .right-column {
   }
 
   .right-column {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1240px) {
   .sidebar {
     position: static;
     width: auto;
     min-height: 0;
+    padding: 14px;
   }
 
   .app-shell {
     margin-left: 0;
     width: 100%;
+    max-width: 100%;
   }
 
   .nav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(130px, 1fr));
   }
 
   .topbar,
@@ -922,6 +942,13 @@ body[data-section="relatorios"] .right-column {
   }
 }
 
+@media (max-width: 980px) {
+  .nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
 @media (max-width: 640px) {
   .nav {
     grid-template-columns: 1fr 1fr;
@@ -939,4 +966,5 @@ body[data-section="relatorios"] .right-column {
   .top-actions {
     grid-template-columns: 1fr;
   }
+
 }
