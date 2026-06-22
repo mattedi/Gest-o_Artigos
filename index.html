@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SciTrack Alunos</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand-mark" aria-label="SciTrack Alunos">
+        <div class="book-icon">▰</div>
+        <span class="brand-title">SciTrack Alunos</span>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-section="dashboard">
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </button>
+        <button class="nav-item" data-section="artigos">
+          <span class="nav-icon">▤</span>
+          Artigos
+        </button>
+        <button class="nav-item" data-section="kanban">
+          <span class="nav-icon">▦</span>
+          Kanban
+        </button>
+        <button class="nav-item" data-section="alunos">
+          <span class="nav-icon">♙</span>
+          Alunos
+        </button>
+        <button class="nav-item" data-section="prazos">
+          <span class="nav-icon">◷</span>
+          Prazos
+        </button>
+        <button class="nav-item" data-section="submissoes">
+          <span class="nav-icon">✈</span>
+          Submissões
+        </button>
+        <button class="nav-item" data-section="relatorios">
+          <span class="nav-icon">▥</span>
+          Relatórios
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="help-button">
+          <span class="nav-icon">?</span>
+          Ajuda
+        </button>
+        <div>
+          <strong>SciTrack Alunos</strong>
+          <small>v1.0.0</small>
+        </div>
+      </div>
+    </aside>
+
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>SciTrack Alunos</h1>
+          <p>Acompanhamento da produção científica</p>
+        </div>
+        <div class="top-actions">
+          <button class="primary-button" id="newArticleButton">+ Novo artigo</button>
+          <button class="notification-button" aria-label="Notificações">
+            ♢
+            <span id="notificationBadge">0</span>
+          </button>
+          <div class="profile">
+            <div class="avatar">MM</div>
+            <div>
+              <strong>Prof. Marcos Mattedi</strong>
+              <span>Coordenador</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="filter-strip">
+        <label class="search-field">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Artigo, aluno, área ou ação" />
+        </label>
+        <label>
+          Status
+          <select id="statusFilter">
+            <option value="todos">Todos</option>
+          </select>
+        </label>
+        <label>
+          Aluno
+          <select id="studentFilter">
+            <option value="todos">Todos</option>
+          </select>
+        </label>
+        <label>
+          Período
+          <select id="periodFilter">
+            <option value="30">Próximos 30 dias</option>
+            <option value="7">Próximos 7 dias</option>
+            <option value="90">Próximos 90 dias</option>
+            <option value="todos">Todo o ciclo</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="stats-grid panel-metrics" id="statsGrid"></section>
+
+      <section class="workspace">
+        <div class="main-column">
+          <section class="panel panel-kanban" id="kanbanSection">
+            <div class="panel-header">
+              <div>
+                <h2>Pipeline de Artigos</h2>
+                <p>Ciclo operacional, científico e editorial.</p>
+              </div>
+              <button class="ghost-button compact" id="expandKanbanButton">Ver quadro completo</button>
+            </div>
+            <div class="kanban-board" id="kanbanBoard"></div>
+          </section>
+
+          <section class="bottom-grid panel-analytics">
+            <div class="panel panel-status-chart">
+              <div class="panel-header">
+                <h2>Artigos por status</h2>
+              </div>
+              <div class="chart-row">
+                <div class="donut" id="statusDonut">
+                  <div>
+                    <strong id="totalArticles">0</strong>
+                    <span>Total</span>
+                  </div>
+                </div>
+                <ul class="legend" id="statusLegend"></ul>
+              </div>
+            </div>
+
+            <div class="panel panel-student-output">
+              <div class="panel-header">
+                <h2>Produção por aluno</h2>
+                <p>Artigos em andamento</p>
+              </div>
+              <div class="bar-list" id="studentBars"></div>
+            </div>
+          </section>
+
+          <section class="panel panel-article-table">
+            <div class="panel-header">
+              <h2>Artigos recentes</h2>
+              <button class="ghost-button compact" id="exportButton">Exportar CSV</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Artigo</th>
+                    <th>Aluno</th>
+                    <th>Status</th>
+                    <th>Próxima ação</th>
+                    <th>Prazo</th>
+                    <th>Risco</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="recentTable"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <aside class="right-column">
+          <section class="panel panel-deadlines">
+            <div class="panel-header">
+              <h2>Prazos da Semana</h2>
+            </div>
+            <div class="deadline-list" id="deadlineList"></div>
+          </section>
+
+          <section class="panel panel-alerts">
+            <div class="panel-header">
+              <h2>Alertas</h2>
+            </div>
+            <div class="alert-list" id="alertList"></div>
+          </section>
+
+          <section class="panel ai-panel panel-ai-summary">
+            <div class="panel-header">
+              <h2>Síntese IA</h2>
+            </div>
+            <p id="aiSummary"></p>
+            <button class="primary-button full" id="refreshSummaryButton">Atualizar síntese</button>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <dialog id="articleDialog">
+      <form method="dialog" id="articleForm">
+        <div class="dialog-header">
+          <h2 id="dialogTitle">Novo artigo</h2>
+          <button type="button" class="icon-button" id="closeDialogButton">×</button>
+        </div>
+        <input name="id" type="hidden" />
+        <div class="form-grid">
+          <label>
+            Título
+            <input name="title" required />
+          </label>
+          <label>
+            Aluno responsável
+            <input name="student" required />
+          </label>
+          <label>
+            Curso
+            <input name="course" value="Ciência da Computação" />
+          </label>
+          <label>
+            Nível
+            <select name="level">
+              <option>Graduação</option>
+              <option>Mestrado</option>
+              <option>Doutorado</option>
+            </select>
+          </label>
+          <label>
+            Área
+            <input name="area" required />
+          </label>
+          <label>
+            Tipo
+            <select name="type">
+              <option>Artigo</option>
+              <option>Congresso</option>
+              <option>Capítulo</option>
+              <option>Livro</option>
+            </select>
+          </label>
+          <label>
+            Status
+            <select name="status" id="formStatus"></select>
+          </label>
+          <label>
+            Prazo
+            <input name="deadline" type="date" required />
+          </label>
+          <label>
+            Periódico ou evento alvo
+            <input name="venue" />
+          </label>
+          <label>
+            Próxima ação
+            <input name="nextAction" required />
+          </label>
+          <label class="wide">
+            Observações
+            <textarea name="notes" rows="4"></textarea>
+          </label>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="danger-button hidden" id="deleteArticleButton">Excluir</button>
+          <div class="dialog-action-group">
+            <button type="button" class="ghost-button" id="touchArticleButton">Marcar atualização</button>
+            <button type="button" class="ghost-button" id="advanceArticleButton">Avançar etapa</button>
+            <button type="button" class="ghost-button" id="cancelDialogButton">Cancelar</button>
+            <button class="primary-button" value="default">Salvar artigo</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>

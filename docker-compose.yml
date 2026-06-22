@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: scitrack_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: scitrack
+      POSTGRES_USER: scitrack
+      POSTGRES_PASSWORD: scitrack
+    ports:
+      - "5433:5432"
+    volumes:
+      - scitrack_pgdata:/var/lib/postgresql/data
+
+volumes:
+  scitrack_pgdata:
